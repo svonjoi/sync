@@ -1,7 +1,7 @@
-settings {
-	nodaemon = true,
-	maxProcesses = 1,
-}
+-- settings {
+-- 	nodaemon = true,
+-- 	maxProcesses = 1,
+-- }
 
 local rclone = {}
 rclone = {
@@ -29,7 +29,8 @@ rclone = {
 		spawn(event, "rclone",
 			"--config", config.rclone.config_file,
 			'copy',
-			config.source, config.target
+			config.source,
+      config.target
 		)
 	end,
 }
