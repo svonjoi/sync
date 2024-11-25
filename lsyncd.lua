@@ -14,7 +14,7 @@ rclone = {
 		log( "Normal", "syncing new files:\n\n", table.concat( paths, '\n' ) )
 		spawn(elist, 'rclone',
 			'<', table.concat( paths, '\n' ),
-			"--config=" .. config.rclone.config_file,
+			"--config", config.rclone.config_file,
 			-- '--from0',
 			"copy",
 			'--include-from=-',
@@ -26,7 +26,11 @@ rclone = {
 	init = function(event)
 		local config = event.config
 		-- local event = inlet.createBlanketEvent()
-		spawn(event, "rclone", 'copy', config.source, config.target)
+		spawn(event, "rclone",
+			"--config", config.rclone.config_file,
+			'copy',
+			config.source, config.target
+		)
 	end,
 }
 rclone.checkgauge = {
@@ -56,7 +60,7 @@ end
 sync {
 	rclone,
 	source = "src",
-	target = "dest",
+	target = "dump:",
 	rclone = {
 		config_file = "./rclone.conf",
 	},
