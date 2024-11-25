@@ -47,17 +47,6 @@ rclone.prepare = function(config, level)
 	end
 end
 
-
--- sync {
--- 	default.rsync,
--- 	source = "src/",
--- 	target = "dest/",
--- 	delay = 30,
--- 	rsync = {
--- 		backup = true,
--- 		backup_dir = "bak",
--- 	}
--- }
 sync {
 	rclone,
 	source = "src",
