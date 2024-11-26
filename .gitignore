@@ -1,1 +1,3 @@
-test_files/src/
+src/
+jump/
+.envrc

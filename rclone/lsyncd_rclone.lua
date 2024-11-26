@@ -49,10 +49,10 @@ end
 
 sync {
 	rclone,
-	source = "test_files/src",
-	target = "dump:dump/test44",
+	source = "./jump/",
+	target = "dump:dump/test48",
 	rclone = {
-		config_file = "./rclone.conf",
+		config_file = "./rclone/rclone.conf",
 	},
 	delay = 30,
 }

@@ -1,7 +1,7 @@
 sync {
 	default.rsync,
 	source = "src/",
-	target = "dest/",
+	target = "./jump/",
 	delay = 30,
 	rsync = {
 		_extra = {
