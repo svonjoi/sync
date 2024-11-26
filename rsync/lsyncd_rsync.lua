@@ -4,7 +4,8 @@ sync {
 	target = "dest/",
 	delay = 30,
 	rsync = {
-		backup = true,
-		backup_dir = "bak",
+		_extra = {
+			"--ignore-existing"
+		}
 	}
 }
