@@ -49,8 +49,8 @@ end
 
 sync {
 	rclone,
-	source = "src",
-	target = "dump:",
+	source = "test_files/src",
+	target = "dump:dump/test44",
 	rclone = {
 		config_file = "./rclone.conf",
 	},
