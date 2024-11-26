@@ -46,7 +46,9 @@ rclone.prepare = function(config, level)
 		error('need rclone.config_file', level)
 	end
 end
-
+settings {
+	nodaemon = true,
+}
 sync {
 	rclone,
 	source = "./jump/",

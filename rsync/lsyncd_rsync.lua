@@ -1,3 +1,6 @@
+settings {
+	nodaemon = true,
+}
 sync {
 	default.rsync,
 	source = "src/",
