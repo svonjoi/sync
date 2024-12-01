@@ -8,42 +8,66 @@ rclone = {
 	delay = 30,
 	maxProcesses = 1,
 	action = function(inlet)
-		local elist = inlet.getEvents(function(ev) return ev.etype == "Create" end)
 		local config = inlet.getConfig()
-		local paths = elist.getPaths()
-		log( "Normal", "syncing new files:\n\n", table.concat( paths, '\n' ) )
-		spawn(elist, 'rclone',
-			'<', table.concat( paths, '\n' ),
-			"--config", config.rclone.config_file,
-			-- '--from0',
-			"copy",
-			'--include-from=-',
-			'--exclude=*',
-			config.source,
-			config.target
-		)
+		local bkdir = config.rclone.bkroot..os.date("%Y-%m-%dT%X")
+		local function run_with_events(evs, cmd)
+			local paths = evs.getPaths()
+			log( "Normal", ("doin' %s for files:\n\n"):format(cmd), table.concat( paths, '\n' ) )
+			spawn(evs, 'rclone',
+				'<', table.concat( paths, '\n' ),
+				"--config", config.rclone.config_file,
+				'--track-renames',
+				cmd,
+				'--include-from=-', "--backup-dir", bkdir,
+				config.source,
+				config.target
+			)
+		end
+		local evs = inlet.getEvents()
+		run_with_events(evs, "sync")
+		-- local deleted = inlet.getEvents(function(ev) return ev.etype == "Delete" end)
+		-- run_with_events(deleted, "delete")
+		-- while true do
+		-- 	local movesrc, movedst = inlet.getEvent()
+		-- 	if movesrc == nil or movedst == nil then
+		-- 		break
+		-- 	end
+		-- 	if not movesrc.etype == "Move" then
+		-- 		goto CONTINUE
+		-- 	end
+		-- 	spawn(movesrc, "rclone", "move", "--backup-dir", bkdir, movesrc.targetPath, movedst.targetPath)
+		-- 	::CONTINUE::
+		-- end
 	end,
+	onMove = true,
 	init = function(event)
 		local config = event.config
 		-- local event = inlet.createBlanketEvent()
 		spawn(event, "rclone",
 			"--config", config.rclone.config_file,
-			'copy',
+			'sync',
 			config.source,
-      config.target
+			config.target
 		)
 	end,
 }
 rclone.checkgauge = {
 	default.checkgauge,
 	rclone = {
-		config_file = true
+		config_file = true,
+		bkroot = true
 	}
 }
 rclone.prepare = function(config, level)
 	default.prepare(config, level+6)
 	if not config.rclone.config_file then
 		error('need rclone.config_file', level)
+	end
+	if not config.rclone.bkroot then
+		error('need backup root rclone.bkroot', level)
+	end
+	if string.sub( config.rclone.bkroot, -1 ) ~= '/' then
+		config.rclone.bkroot = config.rclone.bkroot .. "/"
 	end
 end
 settings {
@@ -52,9 +76,10 @@ settings {
 sync {
 	rclone,
 	source = "./jump/",
-	target = "dump:dump/test48",
+	target = "dump:dump/test50",
 	rclone = {
 		config_file = "./rclone/rclone.conf",
+		bkroot = "dump:dump/backups50"
 	},
-	delay = 30,
+	-- delay = 1,
 }
