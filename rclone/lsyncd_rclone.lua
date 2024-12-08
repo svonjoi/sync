@@ -1,7 +1,7 @@
--- settings {
--- 	nodaemon = true,
--- 	maxProcesses = 1,
--- }
+settings {
+	nodaemon = true,
+	-- maxProcesses = 1,
+}
 
 local rclone = {}
 rclone = {
@@ -70,9 +70,7 @@ rclone.prepare = function(config, level)
 		config.rclone.bkroot = config.rclone.bkroot .. "/"
 	end
 end
-settings {
-	nodaemon = true,
-}
+
 sync {
 	rclone,
 	source = "./jump/",
