@@ -1,4 +1,4 @@
 src/
 jump/
 .envrc
-rsync/jobs/*.lua
+rsync/user_cfg.lua

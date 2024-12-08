@@ -5,6 +5,5 @@ return {
 	nodaemon = true,
 	-- maxProcesses = 2,
 	-- keep running at startup although one or more targets failed due to not being reachable
-	-- TODO: prod true
-	insist = false,
+	insist = true,
 }
