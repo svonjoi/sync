@@ -6,6 +6,9 @@ s.statusFile = "/tmp/lsyncdtest/lsyncd_rsync_job1.status"
 
 settings(s)
 
+local ssh_private_key = os.getenv("SSH_PRIVATE_KEY")
+assert(ssh_private_key ~= nil, "Environment variable SSH_PRIVATE_KEY not set")
+
 local cfg = {
 	{ source = "/tmp/lsyncdtest/source", target = "/root/lsyncd/test_target_1" },
 	{ source = "/tmp/lsyncdtest/source2", target = "/root/lsyncd/test_target_2" },
@@ -25,7 +28,7 @@ for _, conf in ipairs(cfg) do
 		},
 		ssh = {
 			port = 22,
-			identityFile = "/home/user/.ssh/key",
+			identityFile = ssh_private_key,
 		},
 	})
 end
