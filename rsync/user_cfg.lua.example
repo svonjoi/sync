@@ -6,24 +6,26 @@ s.statusFile = "/tmp/lsyncdtest/lsyncd_rsync_job1.status"
 
 settings(s)
 
--- TODO: test with rsync.ssh
--- TODO: multiple sync
-
 local cfg = {
-	{ source = "/tmp/lsyncdtest/source", target = "/tmp/lsyncdtest/target" },
-	{ source = "/tmp/lsyncdtest/source2", target = "/tmp/lsyncdtest/target2" },
+	{ source = "/tmp/lsyncdtest/source", target = "/root/lsyncd/test_target_1" },
+	{ source = "/tmp/lsyncdtest/source2", target = "/root/lsyncd/test_target_2" },
 }
 
 for _, conf in ipairs(cfg) do
 	sync({
-		default.rsync,
+		default.rsyncssh,
 		source = conf.source,
-		target = conf.target,
-		delay = 5,
+		host = "lab",
+		-- excludeFrom = "/etc/lsyncd.exclude",
+		targetdir = conf.target,
 		rsync = {
-			_extra = {
-				"--ignore-existing",
-			},
+			archive = true,
+			compress = false,
+			whole_file = false,
+		},
+		ssh = {
+			port = 22,
+			identityFile = "/home/user/.ssh/key",
 		},
 	})
 end
