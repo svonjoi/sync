@@ -1,34 +1,23 @@
-package.path = package.path .. "/?.lua"
-local s = require("rsync.settings")
-
-s.logfile = "/tmp/lsyncdtest/lsyncd_rsync_job1.log"
-s.statusFile = "/tmp/lsyncdtest/lsyncd_rsync_job1.status"
-
-settings(s)
-
-local ssh_private_key = os.getenv("SSH_PRIVATE_KEY")
-assert(ssh_private_key ~= nil, "Environment variable SSH_PRIVATE_KEY not set")
-
-local cfg = {
-	{ source = "/tmp/lsyncdtest/source", target = "/root/lsyncd/test_target_1" },
-	{ source = "/tmp/lsyncdtest/source2", target = "/root/lsyncd/test_target_2" },
+return {
+	settings = {
+		logfile = "/tmp/lsyncd/lsyncd.log",
+		statusFile = "/tmp/lsyncd/lsyncd.status",
+		statusInterval = 20,
+		nodaemon = true,
+		-- maxProcesses = 2,
+		-- keep running at startup although one or more targets failed due to not being reachable
+		insist = true,
+	},
+	dirs = {
+		{
+			source = "/tmp/lsyncd/source1",
+			target = "/tmp/lsyncd/target1",
+			exclude = {},
+		},
+		{
+			source = "/tmp/lsyncd/source2",
+			target = "/tmp/lsyncd/target2",
+			exclude = { "/logs" },
+		},
+	},
 }
-
-for _, conf in ipairs(cfg) do
-	sync({
-		default.rsyncssh,
-		source = conf.source,
-		host = "lab",
-		-- excludeFrom = "/etc/lsyncd.exclude",
-		targetdir = conf.target,
-		rsync = {
-			archive = true,
-			compress = false,
-			whole_file = false,
-		},
-		ssh = {
-			port = 22,
-			identityFile = ssh_private_key,
-		},
-	})
-end
