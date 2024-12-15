@@ -13,7 +13,3 @@ service descriptors for debug the setup
 ```bash
 journalctl -f -b unit <service_name> | lnav
 ```
-
-[Install]
-WantedBy=multi-user.target
-
