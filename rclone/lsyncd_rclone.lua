@@ -12,7 +12,7 @@ rclone = {
 		local bkdir = config.rclone.bkroot..os.date("%Y-%m-%dT%X")
 		local function run_with_events(evs, cmd)
 			local paths = evs.getPaths()
-			log( "Normal", ("doin' %s for files:\n\n"):format(cmd), table.concat( paths, '\n' ) )
+			log( "Normal", ("doin' %s for files in %s:\n\n"):format(cmd, config.rclone.prefix), table.concat( paths, '\n' ) )
 			spawn(evs, 'rclone',
 				'<', table.concat( paths, '\n' ),
 				"--config", config.rclone.config_file,
@@ -55,7 +55,8 @@ rclone.checkgauge = {
 	default.checkgauge,
 	rclone = {
 		config_file = true,
-		bkroot = true
+		bkroot = true,
+		prefix = true
 	}
 }
 rclone.prepare = function(config, level)
